@@ -18,26 +18,22 @@
     (terpri)
     (setq expression (read-line))
     (terpri)
-    (write (expression-to-lexemes-list expression))
-    (terpri)
     (let ((stack nil))
         (loop for lexeme in (expression-to-lexemes-list expression) do 
-            (terpri)
             (cond 
-                ((numberp lexeme) 
-                    (write 'num)
+                ((numberp lexeme)
                     (push lexeme stack)
                 )
                 ((symbolp lexeme)
-                    (write 'sym)
+                    (push (eval (cons lexeme (reverse (list (pop stack) (pop stack))))) stack)
                 )
             )
         )
-        (write stack)
+        (terpri)
+        (princ "Result: ")
+        (write (pop stack))
+        (terpri)
     )
-
-
-
 )
 
 (calc-reverse-polish-expression)
