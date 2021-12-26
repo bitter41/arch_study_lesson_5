@@ -14,10 +14,6 @@
 )
 
 (defun calc-reverse-polish-expression()
-    (princ "Enter expression: ")
-    (terpri)
-    (setq expression (read-line))
-    (terpri)
     (let ((stack nil))
         (loop for lexeme in (expression-to-lexemes-list expression) do 
             (cond 
@@ -29,11 +25,29 @@
                 )
             )
         )
-        (terpri)
+        (if (> (list-length stack) 1)
+            (error "Something wrong: found more then one result in stack")
+        )
+
         (princ "Result: ")
         (write (pop stack))
-        (terpri)
     )
 )
 
-(calc-reverse-polish-expression)
+(setq expression "")
+(loop do
+    (terpri)
+    (princ "Enter expression or type '/exit':")
+    (terpri)
+    (setq expression (read-line))
+    (terpri)
+    (if (string= expression "/exit") (return-from nil nil))
+    (handler-case (calc-reverse-polish-expression)
+        (t (c)
+            (format t "[ERROR] ~a~%" c)
+        )
+    )
+    (terpri)
+    (princ "======================")
+    (terpri)
+)
